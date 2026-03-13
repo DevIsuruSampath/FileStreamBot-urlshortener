@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, timezone
+
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 
@@ -7,12 +8,18 @@ from .config import settings
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
+# bcrypt only supports up to 72 bytes. Dokploy secrets/admin defaults can exceed that.
+def _bcrypt_safe_secret(secret: str) -> str:
+    raw = (secret or "").encode("utf-8")[:72]
+    return raw.decode("utf-8", errors="ignore")
+
+
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    return pwd_context.hash(_bcrypt_safe_secret(password))
 
 
 def verify_password(password: str, hashed: str) -> bool:
-    return pwd_context.verify(password, hashed)
+    return pwd_context.verify(_bcrypt_safe_secret(password), hashed)
 
 
 def create_token(subject: str) -> str:
