@@ -28,8 +28,8 @@ function hostMatches(targetHost: string, currentHost: string): boolean {
   return currentHost === targetHost || currentHost.endsWith(`.${targetHost}`);
 }
 
-function currentHostFromHeaders(): string {
-  const h = headers();
+async function currentHostFromHeaders(): Promise<string> {
+  const h = await headers();
   const forwarded = h.get("x-forwarded-host") || "";
   const direct = h.get("host") || "";
   return normalizeHost(forwarded || direct);
@@ -67,7 +67,7 @@ export default async function ShortCodePage({
   const { code } = await params;
   const { mode } = await searchParams;
 
-  const host = currentHostFromHeaders();
+  const host = await currentHostFromHeaders();
   const contentHost = normalizeHost(process.env.NEXT_PUBLIC_CONTENT_HOST || "adsexample.com");
   const contentMode = mode === "content" || hostMatches(contentHost, host);
 
