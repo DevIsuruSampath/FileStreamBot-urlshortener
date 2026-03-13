@@ -1,0 +1,15 @@
+{
+  "name": "filestreambot-urlshortener-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/admin",
+    "apps/web",
+    "apps/content"
+  ],
+  "scripts": {
+    "dev:admin": "npm --workspace @fsb/admin run dev",
+    "dev:web": "npm --workspace @fsb/web run dev",
+    "dev:content": "npm --workspace @fsb/content run dev"
+  }
+}
