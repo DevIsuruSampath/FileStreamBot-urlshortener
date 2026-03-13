@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import select
 
-from .db import engine, Base, SessionLocal
+from .db import engine, Base, SessionLocal, ensure_database_exists
 from .models import AdminUser, VerificationSettings, CATEGORY_VALUES
 from .security import hash_password
 from .config import settings
@@ -43,6 +43,8 @@ async def categories():
 
 @app.on_event("startup")
 async def startup_event():
+    await ensure_database_exists()
+
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
