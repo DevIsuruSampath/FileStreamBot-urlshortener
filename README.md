@@ -87,3 +87,28 @@ Set these in `.env` / deploy env:
 - `PUBLIC_API_HOST=api.example.com`
 - `DATABASE_URL=...`
 - `REDIS_URL=...`
+
+## Dokploy (Dockerfile per app)
+Each app now has its own Dockerfile:
+- `apps/api/Dockerfile`
+- `apps/admin/Dockerfile`
+- `apps/web/Dockerfile`
+
+Suggested Dokploy app setup:
+1. **API service**
+   - Context: `apps/api`
+   - Dockerfile: `Dockerfile`
+   - Port: `8000`
+   - Domain: `api.example.com`
+
+2. **Admin service**
+   - Context: `apps/admin`
+   - Dockerfile: `Dockerfile`
+   - Port: `3001`
+   - Domain: `admin.example.com`
+
+3. **Web service (single app for both domains)**
+   - Context: `apps/web`
+   - Dockerfile: `Dockerfile`
+   - Port: `3000`
+   - Domains: `exa.com`, `adsexample.com`
