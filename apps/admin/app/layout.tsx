@@ -2,6 +2,9 @@ import "./globals.css";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import AuthGate from "./_components/AuthGate";
+import LogoutButton from "./_components/LogoutButton";
+
 export const metadata: Metadata = {
   title: "Admin Dashboard",
   description: "FileStreamBot URL Shortener Admin"
@@ -20,12 +23,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/content">Content (.md)</Link>
               <Link href="/settings/steps">Step Settings</Link>
               <Link href="/settings/profile">Profile</Link>
+              <Link href="/login">Login</Link>
             </nav>
             <p className="note" style={{ marginTop: 16 }}>
-              First login: <b>admin@changeme.com</b> / <b>changeme</b>
+              Default first login: <b>admin@changeme.com</b> / <b>changeme</b>
             </p>
+            <div style={{ marginTop: 12 }}>
+              <LogoutButton />
+            </div>
           </aside>
-          <main className="main">{children}</main>
+          <main className="main">
+            <AuthGate>{children}</AuthGate>
+          </main>
         </div>
       </body>
     </html>

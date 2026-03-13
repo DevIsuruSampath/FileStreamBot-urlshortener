@@ -4,12 +4,10 @@
   "version": "0.1.0",
   "workspaces": [
     "apps/admin",
-    "apps/web",
-    "apps/content"
+    "apps/web"
   ],
   "scripts": {
     "dev:admin": "npm --workspace @fsb/admin run dev",
-    "dev:web": "npm --workspace @fsb/web run dev",
-    "dev:content": "npm --workspace @fsb/content run dev"
+    "dev:web": "npm --workspace @fsb/web run dev"
   }
 }

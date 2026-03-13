@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import select
 
 from .db import engine, Base, SessionLocal
@@ -10,27 +11,37 @@ from .routers.settings import router as settings_router
 from .routers.shortlinks import router as short_router
 from .routers.content import router as content_router
 from .routers.resolve import router as resolve_router
+from .routers.analytics import router as analytics_router
 
-app = FastAPI(title='FileStreamBot URL Shortener API', version='0.1.0')
+app = FastAPI(title="FileStreamBot URL Shortener API", version="0.2.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_origins_list,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(auth_router)
 app.include_router(settings_router)
 app.include_router(short_router)
 app.include_router(content_router)
 app.include_router(resolve_router)
+app.include_router(analytics_router)
 
 
-@app.get('/health')
+@app.get("/health")
 async def health():
-    return {'ok': True}
+    return {"ok": True}
 
 
-@app.get('/v1/categories')
+@app.get("/v1/categories")
 async def categories():
-    return {'categories': CATEGORY_VALUES}
+    return {"categories": CATEGORY_VALUES}
 
 
-@app.on_event('startup')
+@app.on_event("startup")
 async def startup_event():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
@@ -43,7 +54,7 @@ async def startup_event():
                     email=settings.DEFAULT_ADMIN_EMAIL.lower(),
                     password_hash=hash_password(settings.DEFAULT_ADMIN_PASSWORD),
                     must_change_password=True,
-                    full_name='Admin',
+                    full_name="Admin",
                 )
             )
 
